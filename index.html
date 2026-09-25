@@ -1111,7 +1111,7 @@ function pic(k, w = 800, alt = "", eager = false){ const base = PAL[k] ? k : (FA
   return `<img class="ph" src="${IMG(id,w)}" srcset="${set}" sizes="${sizes}" alt="${alt}" loading="${eager ? "eager" : "lazy"}" ${eager ? 'fetchpriority="high"' : ""} decoding="async" onload="this.classList.add('in')" onerror="this.outerHTML=scene('${base}')">`; }
 
 /* ---------- helpers ---------- */
-let lang = "en", bkTab = "flights", trip = "return", openVisa = "iran", cSvc = 0;
+let lang = "en", bkTab = "flights", trip = "oneway", openVisa = "iran", cSvc = 0;
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const t = k => (T[lang][k] ?? T.en[k] ?? k);
 const pick = o => o[lang] ?? o.en;
@@ -1274,12 +1274,15 @@ async function searchFlights(){
       const u = new URL(CONFIG.flightApi);
       Object.entries({ origin:q.from, destination:q.to, depart:q.depart, return:q.ret, adults:q.pax, cabin:q.cls.toLowerCase() }).forEach(([k,v]) => v && u.searchParams.set(k,v));
       const r = await fetch(u); const j = await r.json();
-      fares = (j.results || []).slice(0, 6); cur = j.currency || "USD"; window.__fareMode = j.mode || "data"; if(j.error) failed = true;
+      fares = (j.results || []).slice(0, 6); cur = j.currency || "USD"; window.__nearby = j.nearby || []; window.__fareMode = j.mode || "data"; if(j.error) failed = true;
     }catch(e){ failed = true; }
     if(failed && /claude/.test(location.hostname)){ fares = demoFares(q); failed = false; renderFares(q, fares, cur, true, false); return; }  // chat preview blocks outside data
   }
   renderFares(q, fares, cur, demo, failed);
 }
+function pickDate(d, r){ const a = $("#bk-flights-dep"); a.value = d; a.dispatchEvent(new Event("input",{bubbles:true}));
+  if(r){ const b = $("#bk-flights-ret"); if(b){ b.value = r; b.dispatchEvent(new Event("input",{bubbles:true})); } }
+  searchFlights(); }
 function renderFares(q, fares, cur, demo, failed){
   const box = $("#fares"), sym = cur.toUpperCase() === "USD" ? "$" : cur.toUpperCase() + " ", n = x => Number(x).toLocaleString("en-US");
   const route = `${q.fromName} → ${q.toName}`;
@@ -1287,11 +1290,12 @@ function renderFares(q, fares, cur, demo, failed){
     `Airline: ${AIRLINES_BY_CODE[f.airline] || f.airline}${f.flight_number ? " " + f.airline + f.flight_number : ""}`, `Departure: ${fmtDate(f.departure_at)}`,
     q.ret ? `Return: ${fmtDate(f.return_at || q.ret)}` : "", `Passengers: ${q.pax}`, `Class: ${q.cls}`, `Price seen on website: ${sym}${n(f.price)} per person`].filter(Boolean).join("\n"));
   if(!fares.length){
-    box.innerHTML = `<div class="fares-empty"><div><b>${failed ? "Prices are not available right now." : "No flights available for this date."}</b><p class="fares-note">${failed ? "Please try again in a moment." : "Try another date or route."} Or <a href="${$("#bkSend").href}" target="_blank" rel="noopener" style="color:var(--blue)">ask us on WhatsApp</a>.</p></div></div>`;
+    const near = failed ? [] : (window.__nearby || []), dn = d => new Date(d + "T12:00:00").toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
+    box.innerHTML = `<div class="fares-empty"><div style="display:grid;gap:10px"><b>${failed ? "Prices are not available right now." : `No flights available on ${dn(q.depart)}.`}</b>${near.length ? `<span class="fares-note" style="margin:0">Dates with available prices:</span><div class="choices">${near.map(n => `<button type="button" onclick="pickDate('${n.date}','${n.return||""}')">${dn(n.date)}${n.return ? " – " + dn(n.return) : ""} · ${sym}${n.price}</button>`).join("")}</div>` : ""}<p class="fares-note">${failed ? "Please try again in a moment." : "Try another date or route."} Or <a href="${$("#bkSend").href}" target="_blank" rel="noopener" style="color:var(--blue)">ask us on WhatsApp</a>.</p></div></div>`;
     return;
   }
   const min = Math.min(...fares.map(f => f.price));
-  box.innerHTML = `<div class="fares-head"><b>${route}${demo ? '<span class="demo-tag">EXAMPLE</span>' : ""}</b><span>${fares.length} fares · from ${sym}${n(min)} per person</span></div>` +
+  box.innerHTML = `<div class="fares-head"><b>${route}${demo ? '<span class="demo-tag">EXAMPLE</span>' : ""}</b><span>${fares.length} ${fares.length === 1 ? "fare" : "fares"} · from ${sym}${n(min)} per person</span></div>` +
     fares.map(f => `<div class="fare ${f.price === min ? "best" : ""}"><span class="al">${f.airline}</span>
       <div class="fare-main"><b>${f.airline_name || AIRLINES_BY_CODE[f.airline] || f.airline}</b><span>${String(f.departure_at).slice(0,10) !== q.depart ? "<em style='font-style:normal;color:var(--blue)'>Nearest date · </em>" : ""}${fmtDate(f.departure_at)}${f.return_at ? " – " + fmtDate(f.return_at) : ""}</span></div>
       <div class="fare-meta"><b>${stops(f.transfers)}</b><span>${fmtDur(f.duration)}</span></div>

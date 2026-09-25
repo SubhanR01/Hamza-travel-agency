@@ -84,7 +84,28 @@ export default {
         .slice(0, 6)
         .map(f => ({ airline: f.airline, flight_number: f.flight_number, departure_at: f.departure_at, return_at: f.return_at || "",
                      transfers: f.transfers ?? 0, duration: f.duration_to || f.duration || 0, price: Math.round(f.price + markup) }));
-      return reply({ mode: "data", currency: "USD", results });
+
+      // Nothing on the exact date: list OTHER dates in the same month that have prices,
+      // so the customer can pick one (shown as date buttons, never as a fare for their date).
+      let nearby = [];
+      if (!results.length) {
+        api.searchParams.set("departure_at", depart.slice(0, 7));
+        if (ret) api.searchParams.set("return_at", ret.slice(0, 7));
+        api.searchParams.set("limit", "100");
+        const r2 = await fetch(api, { headers: { "X-Access-Token": env.TP_TOKEN } });
+        const j2 = r2.ok ? await r2.json() : { data: [] };
+        const best = new Map();
+        for (const f of j2.data || []) {
+          const d = String(f.departure_at).slice(0, 10), rd = ret ? String(f.return_at || "").slice(0, 10) : "";
+          if (d < new Date().toISOString().slice(0, 10)) continue;
+          const key = d + "|" + rd;
+          if (!best.has(key) || best.get(key).price > f.price) best.set(key, { date: d, return: rd, price: Math.round(f.price + markup) });
+        }
+        const t0 = Date.parse(depart);
+        nearby = [...best.values()].sort((a, b) => Math.abs(Date.parse(a.date) - t0) - Math.abs(Date.parse(b.date) - t0)).slice(0, 6)
+          .sort((a, b) => a.date.localeCompare(b.date));
+      }
+      return reply({ mode: "data", currency: "USD", results, nearby });
     } catch (e) {
       return reply({ currency: "USD", results: [], error: "unavailable" });
     }
