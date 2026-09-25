@@ -1,52 +1,34 @@
-FLUGPREISE AUF DER WEBSITE ANZEIGEN – Anleitung
-===============================================
+FLUGPREISE AUF DER WEBSITE – Anleitung (Version 2: exakte Preise)
+=================================================================
 
-Wie es funktioniert
-  Kunde wählt z. B. Kabul -> Istanbul und klickt "Search flights".
-  Die Website fragt deinen kleinen Preis-Dienst (Cloudflare Worker).
-  Der Worker fragt die Travelpayouts/Aviasales-Datenbank mit deinem geheimen Schlüssel
-  und schickt die günstigsten Flüge zurück. Der Kunde sieht Airline, Datum, Stopps und Preis
-  und klickt "Book" -> WhatsApp öffnet sich mit genau diesem Flug.
-  Der Schlüssel steht NIE in der Website, nur im Worker.
+Was sich geändert hat
+  - Es werden NUR noch Flüge für das genaue Datum angezeigt, das der Kunde wählt.
+    Keine Preise von anderen Tagen mehr.
+  - Gibt es keine Flüge/Preise, steht dort einfach: "No flights available for this date."
 
-Kosten
-  Travelpayouts: kostenlos (Anmeldung nötig)
-  Cloudflare Workers: kostenlos bis 100.000 Aufrufe pro Tag
+Zwei Modi im Preis-Dienst (flight-prices-worker.js)
+  1) LIVE (exakte, aktuelle Preise direkt von den Airlines)  -> braucht ein Duffel-Konto
+  2) DATEN (gespeicherte Preise von Travelpayouts, nur exaktes Datum) -> läuft schon
 
-Wichtig zu wissen
-  - Die Preise sind "zuletzt gefundene" Preise (bis zu 7 Tage alt), keine Echtzeit-Buchungspreise.
-    Deshalb steht auf der Seite: "Wir bestätigen den Endpreis auf WhatsApp."
-  - Für Strecken ab Kabul gibt es manchmal wenige oder keine gespeicherten Preise.
-    Dann zeigt die Seite automatisch: "Get my price on WhatsApp".
-  - Solange kein Preis-Dienst eingetragen ist, öffnet "Search flights" einfach WhatsApp
-    (auf deiner echten Website). Beispielpreise siehst du nur in der Vorschau / lokal.
+SCHRITT 1 – Neuen Code in Cloudflare einfügen (immer nötig)
+  1. dash.cloudflare.com -> Workers & Pages -> hamza-flight -> "Edit code"
+  2. Alles löschen, den Inhalt der neuen Datei flight-prices-worker.js einfügen, "Deploy".
+  Ab jetzt: nur exakte Daten.
 
-SCHRITT 1 – Travelpayouts-Schlüssel holen
-  1. Auf https://www.travelpayouts.com ein Konto anlegen.
-  2. Das Programm "Aviasales" hinzufügen.
-  3. Im Profil unter "API token" den Schlüssel kopieren.
+SCHRITT 2 – Echte Live-Preise mit Duffel (empfohlen)
+  1. Konto anlegen: https://app.duffel.com/join
+  2. Firmendaten ausfüllen. Für echte Preise den "Live mode" freischalten
+     (Duffel prüft dein Unternehmen; Kosten nur bei Buchungen, ca. 3 US$ + 1 %).
+  3. Developers -> Access tokens -> "Create token" (Live) -> kopieren.
+  4. In Cloudflare beim Worker: Settings -> Variables and Secrets -> Add
+       Typ: Secret   Name: DUFFEL_TOKEN   Wert: dein Duffel-Token
+  5. Fertig. Die Website zeigt jetzt Live-Preise für genau das Datum, die Personenzahl und die Klasse.
+  Hinweis: Duffel hat nicht jede Airline ab Kabul (z. B. Kam Air oder Ariana eventuell nicht).
+  Dann steht dort "No flights available for this date." oder nur die verfügbaren Airlines.
 
-SCHRITT 2 – Cloudflare Worker anlegen
-  1. Auf https://dash.cloudflare.com ein kostenloses Konto anlegen.
-  2. "Workers & Pages" -> "Create" -> "Create Worker" -> Namen z. B. hamza-flights -> "Deploy".
-  3. "Edit code" klicken, alles löschen, den Inhalt von flight-prices-worker.js einfügen, "Deploy".
-  4. Worker -> "Settings" -> "Variables and Secrets":
-       - Secret    TP_TOKEN        = dein Travelpayouts-Schlüssel
-       - Variable  ALLOWED_ORIGIN  = die Adresse deiner Website (z. B. https://hamzaqurishi.com)
-                                     zum Testen darf hier * stehen
-       - Optional  MARKUP_USD      = dein Aufschlag pro Person in Dollar, z. B. 15
-  5. Die Adresse des Workers kopieren, z. B. https://hamza-flights.DEINNAME.workers.dev
+Testen
+  https://hamza-flight.ibogak66.workers.dev/?origin=KBL&destination=IST&depart=2026-11-10
+  In der Antwort steht "mode":"live" (Duffel) oder "mode":"data" (Travelpayouts).
 
-SCHRITT 3 – In die Website eintragen
-  index.html mit einem Texteditor öffnen, nach   flightApi   suchen und die Worker-Adresse eintragen:
-      flightApi: "https://hamza-flights.DEINNAME.workers.dev",
-  Speichern. Fertig.
-
-Test
-  Im Browser öffnen:
-  https://hamza-flights.DEINNAME.workers.dev/?origin=KBL&destination=IST&depart=2026-11-10
-  Du solltest eine Liste mit Preisen sehen.
-
-Später auf Echtzeit-Preise umsteigen
-  Wenn du echte, buchbare Live-Preise willst: Duffel (duffel.com) – selbst anmelden,
-  ca. 3 US$ pro Buchung + 1 %. Dafür wird der Worker angepasst; die Website bleibt gleich.
+Sicherheit
+  Wenn die Website online ist: ALLOWED_ORIGIN von * auf deine Website-Adresse ändern.
