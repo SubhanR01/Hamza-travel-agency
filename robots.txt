@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hamza-travel-agency.vercel.app/sitemap.xml
