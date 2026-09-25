@@ -1,0 +1,26 @@
+HAMZA TRAVEL AGENCY – Website
+=============================
+
+ÖFFNEN
+  Doppelklick auf index.html (Safari oder Chrome).
+  Fotos und Videos laden aus dem Internet (Pexels), also braucht der Browser eine Internetverbindung.
+
+DEINE DATEN EINTRAGEN
+  index.html mit einem Texteditor öffnen (z. B. TextEdit im Modus "Reiner Text" oder VS Code)
+  und nach "const CONFIG" suchen. Dort ändern:
+    whatsapp         -> deine WhatsApp-Nummer, nur Ziffern mit Ländervorwahl (z. B. 93701234567)
+    whatsappDisplay  -> die Nummer so, wie sie angezeigt wird (z. B. +93 70 123 4567)
+    phone2           -> zweite Telefonnummer
+    email            -> deine E-Mail-Adresse
+    offices          -> Namen und Adressen deiner Büros (die Felder "en" und "aen" werden angezeigt)
+    prices           -> "ab"-Preise in US-Dollar (Makkah, Madinah, Istanbul, Dubai, Mashhad, Islamabad)
+  Diese Werte sind im Moment nur Platzhalter.
+
+FOTOS & VIDEOS
+  Quelle: Pexels (pexels.com), kostenlose Lizenz, auch für Firmen-Websites, keine Namensnennung nötig.
+  Fotografen u. a.: Neo Evenger, ruveyda yigiter, Ncang Jack, The Lazy Artist Gallery, J@ A, M Y Dogar,
+  Wasim Mirzaie, Qasim Mirzaie, Nikita Korchagin, Yasir Gürbüz, Rushdi Fatani, Sami TÜRK, Meruyert Gonullu.
+
+ONLINE STELLEN
+  Die Datei index.html kann direkt bei jedem Webhoster hochgeladen werden
+  (z. B. Netlify, Vercel, GitHub Pages oder dein eigener Hoster).

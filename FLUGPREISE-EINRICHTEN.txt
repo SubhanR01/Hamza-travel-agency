@@ -1,0 +1,52 @@
+FLUGPREISE AUF DER WEBSITE ANZEIGEN – Anleitung
+===============================================
+
+Wie es funktioniert
+  Kunde wählt z. B. Kabul -> Istanbul und klickt "Search flights".
+  Die Website fragt deinen kleinen Preis-Dienst (Cloudflare Worker).
+  Der Worker fragt die Travelpayouts/Aviasales-Datenbank mit deinem geheimen Schlüssel
+  und schickt die günstigsten Flüge zurück. Der Kunde sieht Airline, Datum, Stopps und Preis
+  und klickt "Book" -> WhatsApp öffnet sich mit genau diesem Flug.
+  Der Schlüssel steht NIE in der Website, nur im Worker.
+
+Kosten
+  Travelpayouts: kostenlos (Anmeldung nötig)
+  Cloudflare Workers: kostenlos bis 100.000 Aufrufe pro Tag
+
+Wichtig zu wissen
+  - Die Preise sind "zuletzt gefundene" Preise (bis zu 7 Tage alt), keine Echtzeit-Buchungspreise.
+    Deshalb steht auf der Seite: "Wir bestätigen den Endpreis auf WhatsApp."
+  - Für Strecken ab Kabul gibt es manchmal wenige oder keine gespeicherten Preise.
+    Dann zeigt die Seite automatisch: "Get my price on WhatsApp".
+  - Solange kein Preis-Dienst eingetragen ist, öffnet "Search flights" einfach WhatsApp
+    (auf deiner echten Website). Beispielpreise siehst du nur in der Vorschau / lokal.
+
+SCHRITT 1 – Travelpayouts-Schlüssel holen
+  1. Auf https://www.travelpayouts.com ein Konto anlegen.
+  2. Das Programm "Aviasales" hinzufügen.
+  3. Im Profil unter "API token" den Schlüssel kopieren.
+
+SCHRITT 2 – Cloudflare Worker anlegen
+  1. Auf https://dash.cloudflare.com ein kostenloses Konto anlegen.
+  2. "Workers & Pages" -> "Create" -> "Create Worker" -> Namen z. B. hamza-flights -> "Deploy".
+  3. "Edit code" klicken, alles löschen, den Inhalt von flight-prices-worker.js einfügen, "Deploy".
+  4. Worker -> "Settings" -> "Variables and Secrets":
+       - Secret    TP_TOKEN        = dein Travelpayouts-Schlüssel
+       - Variable  ALLOWED_ORIGIN  = die Adresse deiner Website (z. B. https://hamzaqurishi.com)
+                                     zum Testen darf hier * stehen
+       - Optional  MARKUP_USD      = dein Aufschlag pro Person in Dollar, z. B. 15
+  5. Die Adresse des Workers kopieren, z. B. https://hamza-flights.DEINNAME.workers.dev
+
+SCHRITT 3 – In die Website eintragen
+  index.html mit einem Texteditor öffnen, nach   flightApi   suchen und die Worker-Adresse eintragen:
+      flightApi: "https://hamza-flights.DEINNAME.workers.dev",
+  Speichern. Fertig.
+
+Test
+  Im Browser öffnen:
+  https://hamza-flights.DEINNAME.workers.dev/?origin=KBL&destination=IST&depart=2026-11-10
+  Du solltest eine Liste mit Preisen sehen.
+
+Später auf Echtzeit-Preise umsteigen
+  Wenn du echte, buchbare Live-Preise willst: Duffel (duffel.com) – selbst anmelden,
+  ca. 3 US$ pro Buchung + 1 %. Dafür wird der Worker angepasst; die Website bleibt gleich.
