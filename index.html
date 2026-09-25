@@ -833,8 +833,8 @@ const CONFIG = {
   phone2: "+93 77 121 2131",
   email: "shakib.qurishi24@gmail.com",
   offices: [
-    { en:"Kabul office", fa:"دفتر کابل", aen:"Street, district, Kabul", afa:"سرک، ناحیه، کابل" },
-    { en:"Second office", fa:"دفتر دوم", aen:"Street, city, country", afa:"سرک، شهر، کشور" }
+    { en:"Office", fa:"دفتر", aen:"Shop No. 109, next to Central Hotel, Ansari Square, Kabul", afa:"چهارراهی انصاری، جوار سنترال هوتل، دوکان نمبر ۱۰۹",
+      map:"https://www.google.com/maps/search/?api=1&query=Central+Hotel+Ansari+Square+Kabul" }
   ],
   flightApi: "https://hamza-flight.ibogak66.workers.dev/",   // URL of your flight-price service (see FLUGPREISE-EINRICHTEN.txt). Empty = customers get prices on WhatsApp.
   prices: { makkah:1250, madinah:1250, istanbul:699, dubai:450, mashhad:390, islamabad:280 }  // PLACEHOLDER "from" prices in USD
@@ -1025,7 +1025,7 @@ Object.assign(T.en, {
  "bk.head":"Get a price","bk.chip":"Reply on WhatsApp",
  "reel.eye":"On the road","reel.drag":"Drag →",
  "ov.eye":"The agency","ov.st":"One chat for your <em>ticket, visa and hotel</em>, and for the pilgrimage you have waited years to make.",
- "fx.off":"Offices","fx.lang":"Languages","fx.langV":"Dari · English","fx.hours":"Office hours","fx.wa":"WhatsApp","fx.waV":"Every day","fx.pay":"Payment","fx.payV":"Cash · Bank · Card","fx.visa":"Visa countries",
+ "fx.off":"Office","fx.lang":"Languages","fx.langV":"Dari · English","fx.hours":"Office hours","fx.wa":"WhatsApp","fx.waV":"Every day","fx.pay":"Payment","fx.payV":"Cash · Bank · Card","fx.visa":"Visa countries",
  "svc.h1":"Every part of","svc.h2":"your journey",
  "tags":["Same day","Popular","Limited places","Worldwide","4 countries"],
  "um.h1":"Umrah for","um.h2":"every family","um.star":"STAR","um.incl":"Included in every package","um.excl":"Not included",
@@ -1151,7 +1151,7 @@ function render(){
     return `<figure>${pic(g.pic || g.scene, 700, h1)}<figcaption><b>${h1}</b><span>${cat}</span></figcaption></figure>`; }).join("");
 
   $("#ovStatement").innerHTML = t("ov.st");
-  const facts = [["fx.off", CONFIG.offices.map(o => o[lang]).join(" · ")],["fx.lang", t("fx.langV")],["fx.hours", t("tb.hours")],["fx.wa", t("fx.waV")],["fx.pay", t("fx.payV")],["fx.visa", VKEYS.map(k => VISA[k][lang].name).join(" · ")]];
+  const facts = [["fx.off", "Ansari Square, Kabul"],["fx.lang", t("fx.langV")],["fx.hours", t("tb.hours")],["fx.wa", t("fx.waV")],["fx.pay", t("fx.payV")],["fx.visa", VKEYS.map(k => VISA[k][lang].name).join(" · ")]];
   $("#facts").innerHTML = facts.map(([k,v]) => `<div class="fact"><dt>${t(k)}</dt><dd>${v}</dd></div>`).join("");
 
   const tags = t("tags");
@@ -1181,7 +1181,7 @@ function render(){
   if(0) $("#faqList").innerHTML = FAQ.map((f,i) => { const [q,a] = pick(f); return `<details ${i===0?"open":""}><summary>${q}</summary><p>${a}</p></details>`; }).join("");
 
   $("#steps").innerHTML = t("ap.steps").map(([b,s]) => `<li><div><b>${b}</b><span>${s}</span></div></li>`).join("");
-  $("#contacts").innerHTML = `<a href="${wa(t("msg.general"))}" target="_blank" rel="noopener"><span>Phone &amp; WhatsApp</span><span class="ltr">${CONFIG.whatsappDisplay}</span></a><a href="mailto:${CONFIG.email}"><span>${t("c.mail")}</span><span>${CONFIG.email}</span></a>${CONFIG.offices.map(o => `<div><span>${o[lang]}</span><span>${lang==="fa"?o.afa:o.aen}</span></div>`).join("")}<div><span>${t("c.hours")}</span><span>${t("tb.hours")}</span></div>`;
+  $("#contacts").innerHTML = `<a href="${wa(t("msg.general"))}" target="_blank" rel="noopener"><span>Phone &amp; WhatsApp</span><span class="ltr">${CONFIG.whatsappDisplay}</span></a><a href="mailto:${CONFIG.email}"><span>${t("c.mail")}</span><span>${CONFIG.email}</span></a>${CONFIG.offices.map(o => `<a href="${o.map}" target="_blank" rel="noopener"><span>Address</span><span>${o.aen}<br><small style="color:var(--blue)">Open in Google Maps ↗</small></span></a>`).join("")}<div><span>${t("c.hours")}</span><span>${t("tb.hours")}</span></div>`;
 
   $("#cSvc").innerHTML = SERVICES.map((s,i) => `<label><input type="radio" name="csvc" value="${i}" ${i===cSvc?"checked":""}><span>${pick(s)[0]}</span></label>`).join("");
   const pax = $("#c-pax").value || "1";
@@ -1192,7 +1192,7 @@ function render(){
   updateContact();
 
   $("#ftSvc").innerHTML = SERVICES.map(s => `<li><a href="#services">${pick(s)[0]}</a></li>`).join("");
-  $("#ftContact").innerHTML = `<li><a class="ltr" href="${wa(t("msg.general"))}" target="_blank" rel="noopener">${CONFIG.whatsappDisplay}</a></li><li><a href="mailto:${CONFIG.email}">${CONFIG.email}</a></li>`;
+  $("#ftContact").innerHTML = `<li><a class="ltr" href="${wa(t("msg.general"))}" target="_blank" rel="noopener">${CONFIG.whatsappDisplay}</a></li><li><a href="mailto:${CONFIG.email}">${CONFIG.email}</a></li>${CONFIG.offices.map(o => `<li><a href="${o.map}" target="_blank" rel="noopener">${o.aen}</a></li>`).join("")}`;
   $("#fabQuick").innerHTML = ["flights","umrah","visa","hotels"].map(k => { const n = pick(BK.find(x=>x.k===k).n);
     return `<a href="${wa(t("msg.hello")+" "+t("msg.svc")+" "+n)}" target="_blank" rel="noopener"><span>${n}</span><svg class="flip"><use href="#send"/></svg></a>`; }).join("");
   updateFab();
