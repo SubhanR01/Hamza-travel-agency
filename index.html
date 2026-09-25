@@ -861,7 +861,8 @@ const CONFIG = {
     { en:"Office", fa:"دفتر", aen:"Shop No. 109, next to Central Hotel, Ansari Square, Kabul", afa:"چهارراهی انصاری، جوار سنترال هوتل، دوکان نمبر ۱۰۹",
       map:"https://www.google.com/maps/search/?api=1&query=Central+Hotel+Ansari+Square+Kabul" }
   ],
-  flightApi: "https://hamza-flight.ibogak66.workers.dev/",   // URL of your flight-price service (see FLUGPREISE-EINRICHTEN.txt). Empty = customers get prices on WhatsApp.
+  flightApi: "https://hamza-flight.ibogak66.workers.dev/",
+  priceMarkup: 10,   // USD added to every flight price shown on the website (per person)
   prices: { makkah:1250, madinah:1250, istanbul:699, dubai:450, mashhad:390, islamabad:280 }  // PLACEHOLDER "from" prices in USD
 };
 
@@ -1300,7 +1301,9 @@ async function searchFlights(){
       const u = new URL(CONFIG.flightApi);
       Object.entries({ origin:q.from, destination:q.to, depart:q.depart, return:q.ret, adults:q.pax, cabin:q.cls.toLowerCase() }).forEach(([k,v]) => v && u.searchParams.set(k,v));
       const r = await fetch(u); const j = await r.json();
-      fares = (j.results || []).slice(0, 6); cur = j.currency || "USD"; window.__nearby = j.nearby || []; window.__fareMode = j.mode || "data"; if(j.error) failed = true;
+      const mk = Number(CONFIG.priceMarkup) || 0;
+      fares = (j.results || []).slice(0, 6).map(f => ({ ...f, price: Math.round(f.price + mk) })); cur = j.currency || "USD";
+      window.__nearby = (j.nearby || []).map(n => ({ ...n, price: Math.round(n.price + mk) })); window.__fareMode = j.mode || "data"; if(j.error) failed = true;
     }catch(e){ failed = true; }
     if(failed && /claude/.test(location.hostname)){ fares = demoFares(q); failed = false; renderFares(q, fares, cur, true, false); return; }  // chat preview blocks outside data
   }
