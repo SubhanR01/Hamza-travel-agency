@@ -35,12 +35,14 @@
 <meta name="twitter:description" content="Travel agency in Kabul, Afghanistan. Flight tickets, Umrah and Hajj packages, hotels and visas for Iran, Pakistan, Turkey and Saudi Arabia. Ansari Square, Kabul. Call or WhatsApp +93 77 121 2131.">
 <meta name="twitter:image" content="https://hamza-travel-agency.vercel.app/og-image.jpg">
 <meta name="theme-color" content="#1E6CB0">
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
-<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
-<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="icon" href="/favicon.ico?v=2" sizes="any">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png?v=2">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png?v=2">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png?v=2">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png?v=2">
 <link rel="manifest" href="/site.webmanifest">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 <script type="application/ld+json">[{"@context": "https://schema.org", "@type": "TravelAgency", "@id": "https://hamza-travel-agency.vercel.app/#agency", "name": "Hamza Qurishi Tourism Company", "alternateName": ["Hamza Travels & Tours", "Hamza Travel Agency"], "url": "https://hamza-travel-agency.vercel.app/", "logo": "https://hamza-travel-agency.vercel.app/icon-512.png", "image": "https://hamza-travel-agency.vercel.app/og-image.jpg", "description": "Travel agency in Kabul, Afghanistan. Flight tickets, Umrah and Hajj packages, hotels and visas for Iran, Pakistan, Turkey and Saudi Arabia. Ansari Square, Kabul. Call or WhatsApp +93 77 121 2131.", "telephone": "+93771212131", "email": "shakib.qurishi24@gmail.com", "priceRange": "$$", "address": {"@type": "PostalAddress", "streetAddress": "Shop No. 109, next to Central Hotel, Ansari Square", "addressLocality": "Kabul", "addressRegion": "Kabul", "addressCountry": "AF"}, "areaServed": [{"@type": "City", "name": "Kabul"}, {"@type": "Country", "name": "Afghanistan"}], "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"], "opens": "08:00", "closes": "18:00"}], "contactPoint": [{"@type": "ContactPoint", "telephone": "+93771212131", "contactType": "customer service", "availableLanguage": ["English", "Dari", "Pashto"]}], "knowsLanguage": ["en", "fa", "ps"], "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Travel services", "itemListElement": [{"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Flight tickets"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Umrah packages"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Hajj packages"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Hotel booking"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Iran visa"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Pakistan visa"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Turkey visa"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Saudi Arabia visa"}}]}}, {"@context": "https://schema.org", "@type": "WebSite", "name": "Hamza Qurishi Tourism Company", "url": "https://hamza-travel-agency.vercel.app/", "inLanguage": "en"}]</script>
 <link rel="preload" as="image" href="media/video/hero-poster.webp" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -241,6 +243,14 @@ html[lang^="fa"] .form-head b{font-weight:900;font-size:24px}
 .seg{display:inline-flex;padding:4px;border-radius:999px;border:1px solid var(--line-2);justify-self:start}
 .seg button{border:0;background:transparent;padding:7px 15px;border-radius:999px;cursor:pointer;color:var(--dim);font:500 13px var(--f-body)}
 .seg button[aria-pressed="true"]{background:var(--paper-3);color:var(--ink)}
+.place{position:relative}
+.sug{position:absolute;top:100%;left:0;right:0;min-width:280px;z-index:40;margin-top:6px;background:#fff;border:1px solid var(--line-2);border-radius:14px;box-shadow:0 24px 50px -20px rgba(18,21,19,.35);max-height:340px;overflow:auto;padding:6px}
+.sug button{display:flex;width:100%;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;border:0;background:none;border-radius:10px;text-align:left;cursor:pointer;font:inherit;color:var(--ink)}
+.sug button[aria-selected="true"],.sug button:hover{background:var(--paper-2)}
+.sug b{display:block;font-weight:600;font-size:15px}
+.sug small{display:block;color:var(--dim);font-size:12.5px}
+.sug code{font:600 12px var(--f-mono);color:var(--blue);background:var(--blue-soft);padding:4px 7px;border-radius:6px}
+.sug-empty{padding:12px;color:var(--dim);font-size:14px}
 .bk-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px}
 .field{display:grid;gap:8px;min-width:0}
 .field.full{grid-column:1/-1}
@@ -1025,7 +1035,7 @@ const CITIES = {
 const L = (en,fa) => ({en,fa});
 const BK = [
  {k:"flights",i:"plane",n:L("Flights","تکت طیاره"),seg:true,fields:[
-   {id:"from",n:L("From","از"),t:"city",v:0},{id:"to",n:L("To","به"),t:"city",v:6},
+   {id:"from",n:L("From","از"),t:"place",v:{code:"KBL",label:"Kabul, Afghanistan"}},{id:"to",n:L("To","به"),t:"place",v:{code:"IST",label:"Istanbul, Turkey"}},
    {id:"dep",n:L("Departure","تاریخ رفت"),t:"date",d:14},{id:"ret",n:L("Return","تاریخ برگشت"),t:"date",d:30,ret:true},
    {id:"pax",n:L("Passengers","مسافران"),t:"num",min:1,max:9},{id:"cls",n:L("Class","درجه"),t:"sel",o:[L("Economy","اکونومی"),L("Business","بزنس")]}]},
  {k:"hotels",i:"bed",n:L("Hotels","هوتل"),fields:[
@@ -1233,6 +1243,8 @@ function renderBooking(){
   const cities = CITIES[lang];
   $("#bkFields").innerHTML = tab.fields.map(f => {
     const id = `bk-${tab.k}-${f.id}`, lab = `<label for="${id}">${pick(f.n)}</label>`, st = bkValues[id];
+    if(f.t === "place"){ let pv = f.v; try{ if(st) pv = JSON.parse(st); }catch(e){}
+      return `<div class="field place">${lab}<input class="input" id="${id}" type="text" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="${id}-list" placeholder="City or airport" value="${pv.label}" data-code="${pv.code}"><div class="sug" id="${id}-list" role="listbox" hidden></div></div>`; }
     if(f.t === "city") return `<div class="field">${lab}<select class="input" id="${id}">${cities.map((c,i)=>`<option value="${i}">${c}</option>`).join("")}</select></div>`;
     if(f.t === "date") return `<div class="field">${lab}<input class="input" id="${id}" type="date" min="${addDays(0)}" value="${st ?? addDays(f.d)}" ${f.ret && trip==="oneway" ? "disabled":""}></div>`;
     if(f.t === "month") return `<div class="field">${lab}<input class="input" id="${id}" type="month" value="${st ?? addDays(40).slice(0,7)}"></div>`;
@@ -1249,9 +1261,10 @@ function updateBooking(){
   if(tab.seg) lines.push(`${t("bk.trip")}: ${trip==="oneway" ? t("bk.oneway") : t("bk.return")}`);
   tab.fields.forEach(f => {
     const el = $(`#bk-${tab.k}-${f.id}`); if(!el) return;
-    bkValues[el.id] = el.value;
+    bkValues[el.id] = f.t === "place" ? JSON.stringify({ code: el.dataset.code || "", label: el.value }) : el.value;
     if(f.ret && trip === "oneway") return;
     let v = el.value;
+    if(f.t === "place") v = el.value + (el.dataset.code ? ` (${el.dataset.code})` : "");
     if(f.t === "city") v = CITIES[lang][+v];
     if(f.t === "sel") v = pick(f.o[+v]);
     if(f.t === "num") v = toFa(v);
@@ -1273,11 +1286,63 @@ const fmtDate = iso => { if(!iso) return ""; const d = new Date(iso); return isN
 const fmtDur = m => m ? `${Math.floor(m/60)}h ${String(m%60).padStart(2,"0")}m` : "";
 const stops = n => n === 0 ? "Direct" : n === 1 ? "1 stop" : `${n} stops`;
 
+/* ---------- city / airport search (any airport worldwide) ---------- */
+const placeCache = {};
+async function findPlaces(term){
+  term = term.trim(); if(term.length < 2) return [];
+  if(placeCache[term.toLowerCase()]) return placeCache[term.toLowerCase()];
+  try{
+    const r = await fetch(`https://autocomplete.travelpayouts.com/places2?term=${encodeURIComponent(term)}&locale=en&types[]=city&types[]=airport`);
+    const j = await r.json();
+    const out = (j || []).filter(p => p.code).slice(0, 8).map(p => p.type === "airport"
+      ? { code: p.code, label: `${p.name}, ${p.city_name || ""}`.replace(/, $/,""), sub: p.country_name || "", type: "airport" }
+      : { code: p.code, label: `${p.name}, ${p.country_name || ""}`.replace(/, $/,""), sub: p.main_airport_name ? "All airports" : "", type: "city" });
+    return placeCache[term.toLowerCase()] = out;
+  }catch(e){ return []; }
+}
+function choosePlace(input, p){ input.value = p.label; input.dataset.code = p.code; closeSug(input); updateBooking(); }
+function closeSug(input){ const l = document.getElementById(input.id + "-list"); if(l){ l.hidden = true; l.innerHTML = ""; } input.setAttribute("aria-expanded","false"); }
+async function resolvePlace(input){
+  if(!input || input.dataset.code) return;
+  const t = input.value.trim();
+  if(/^[a-z]{3}$/i.test(t)){ input.dataset.code = t.toUpperCase(); return; }
+  const r = await findPlaces(t); if(r[0]) choosePlace(input, r[0]);
+}
+let sugTimer;
+document.addEventListener("input", e => {
+  const inp = e.target.closest(".place input"); if(!inp) return;
+  inp.dataset.code = /^[A-Z]{3}$/.test(inp.value.trim()) ? inp.value.trim() : "";
+  clearTimeout(sugTimer);
+  sugTimer = setTimeout(async () => {
+    const list = document.getElementById(inp.id + "-list"), res = await findPlaces(inp.value);
+    if(document.activeElement !== inp) return;
+    if(!res.length){ list.innerHTML = inp.value.trim().length >= 2 ? `<div class="sug-empty">No city or airport found</div>` : ""; list.hidden = inp.value.trim().length < 2; return; }
+    list._items = res;
+    list.innerHTML = res.map((p,i) => `<button type="button" role="option" data-i="${i}" aria-selected="${i===0}"><span><b>${p.label}</b>${p.sub ? `<small>${p.type === "airport" ? "Airport · " : ""}${p.sub}</small>` : (p.type === "airport" ? "<small>Airport</small>" : "")}</span><code>${p.code}</code></button>`).join("");
+    list.hidden = false; inp.setAttribute("aria-expanded","true");
+  }, 180);
+});
+document.addEventListener("keydown", e => {
+  const inp = e.target.closest(".place input"); if(!inp) return;
+  const list = document.getElementById(inp.id + "-list"); if(list.hidden || !list._items) return;
+  const btns = [...list.querySelectorAll("button")]; let i = btns.findIndex(b => b.getAttribute("aria-selected") === "true");
+  if(e.key === "ArrowDown" || e.key === "ArrowUp"){ e.preventDefault(); i = (i + (e.key === "ArrowDown" ? 1 : -1) + btns.length) % btns.length; btns.forEach((b,k) => b.setAttribute("aria-selected", String(k===i))); btns[i].scrollIntoView({block:"nearest"}); }
+  if(e.key === "Enter"){ e.preventDefault(); choosePlace(inp, list._items[Math.max(0,i)]); }
+  if(e.key === "Escape") closeSug(inp);
+});
+document.addEventListener("mousedown", e => {
+  const b = e.target.closest(".sug button");
+  if(b){ e.preventDefault(); const list = b.closest(".sug"), inp = document.getElementById(list.id.replace(/-list$/,"")); choosePlace(inp, list._items[+b.dataset.i]); return; }
+  document.querySelectorAll(".place input").forEach(inp => { if(!inp.parentElement.contains(e.target)) closeSug(inp); });
+});
+document.addEventListener("focusin", e => { const inp = e.target.closest(".place input"); if(inp) inp.select(); });
+
 function flightQuery(){
   const v = id => ($(`#bk-flights-${id}`) || {}).value;
-  return { from: code(CITIES.en[+v("from")] || ""), to: code(CITIES.en[+v("to")] || ""), depart: v("dep"), ret: trip === "return" ? v("ret") : "",
+  const pl = id => $(`#bk-flights-${id}`) || { dataset:{}, value:"" };
+  return { from: pl("from").dataset.code || "", to: pl("to").dataset.code || "", depart: v("dep"), ret: trip === "return" ? v("ret") : "",
            pax: Math.max(1, +v("pax") || 1), cls: +v("cls") ? "Business" : "Economy",
-           fromName: (CITIES.en[+v("from")]||"").replace(/ \(.*/,""), toName: (CITIES.en[+v("to")]||"").replace(/ \(.*/,"") };
+           fromName: pl("from").value.split(",")[0].trim(), toName: pl("to").value.split(",")[0].trim() };
 }
 function demoFares(q){
   const hubs = { IST:["TK","FZ","QR","PC"], DXB:["FZ","EK","G9","RQ"], JED:["FZ","SV","QR","EK"], MED:["SV","FZ","EK","QR"], IKA:["W5","IR","FZ","TK"], MHD:["W5","FZ","IR","EK"],
@@ -1289,8 +1354,9 @@ function demoFares(q){
     duration: 180 + i*145 + (q.to === "FRA" || q.to === "BER" ? 360 : 0), departure_at: q.depart + "T0" + (6+i) + ":" + (i*15 % 60 || "00") + ":00", return_at: q.ret ? q.ret + "T1" + (2+i) + ":30:00" : "" }));
 }
 async function searchFlights(){
+  await Promise.all(["from","to"].map(k => resolvePlace($(`#bk-flights-${k}`))));
   const q = flightQuery(), box = $("#fares");
-  if(!q.from || !q.to || q.from === q.to){ box.hidden = false; box.innerHTML = `<p class="fares-note">Choose two different cities.</p>`; return; }
+  if(!q.from || !q.to || q.from === q.to){ box.hidden = false; box.innerHTML = `<p class="fares-note">Please choose a departure and a destination city from the list.</p>`; return; }
   const demo = !CONFIG.flightApi;
   box.hidden = false;
   box.innerHTML = `<p class="fares-note"><span class="spin"></span>Searching fares ${q.from} → ${q.to}…</p>`;
